@@ -1,0 +1,564 @@
+<meta charset="utf-8">
+<title>Ace Home Tutors | Admin & Scheduling (Preview)</title>
+<style>
+  :root {
+    --blue:#0099FF; --blue-deep:#0A6FC2; --flame:#FF3210; --sun:#FBFF64; --sun-deep:#E7EB2E;
+    /* Admin neutrals: cool grey with a faint blue bias (chosen) */
+    --bg:#EEF1F6; --panel:#FFFFFF; --panel-2:#F7F9FC; --sidebar:#0C1524;
+    --ink:#101827; --ink-soft:#556074; --ink-faint:#8B94A6; --line:#E4E8F0; --line-soft:#EDF0F6;
+    /* Semantic (separate from brand accent) */
+    --ok:#12885A; --ok-bg:#E4F4EC; --warn:#B7791F; --warn-bg:#FBF1DA; --info:#0A6FC2; --info-bg:#E3F1FC; --urgent:#D6321A; --urgent-bg:#FCE7E2;
+    --shadow-sm:0 1px 2px rgba(16,24,39,.06),0 1px 3px rgba(16,24,39,.05);
+    --shadow-md:0 6px 20px rgba(16,24,39,.10);
+    --font:"Aptos","Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --font-display:"Aptos Display","Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    --r:14px; --r-sm:9px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --blue:#33ADFF; --blue-deep:#66C2FF; --flame:#FF5638; --sun:#FBFF64; --sun-deep:#D9DE2C;
+      --bg:#0A1120; --panel:#121E2E; --panel-2:#0E1A29; --sidebar:#070C16;
+      --ink:#EAF1FF; --ink-soft:#A2B0C8; --ink-faint:#6B7A94; --line:#22314A; --line-soft:#1A2740;
+      --ok:#3FCB90; --ok-bg:#0F3327; --warn:#E7B14C; --warn-bg:#37290F; --info:#5CB6F5; --info-bg:#0C2A42; --urgent:#FF6A50; --urgent-bg:#3A1712;
+      --shadow-sm:0 1px 2px rgba(0,0,0,.4); --shadow-md:0 8px 24px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="light"]{--bg:#EEF1F6;--panel:#FFFFFF;--panel-2:#F7F9FC;--sidebar:#0C1524;--ink:#101827;--ink-soft:#556074;--ink-faint:#8B94A6;--line:#E4E8F0;--line-soft:#EDF0F6;--ok:#12885A;--ok-bg:#E4F4EC;--warn:#B7791F;--warn-bg:#FBF1DA;--info:#0A6FC2;--info-bg:#E3F1FC;--urgent:#D6321A;--urgent-bg:#FCE7E2;--blue:#0099FF;--blue-deep:#0A6FC2;--flame:#FF3210;}
+  :root[data-theme="dark"]{--bg:#0A1120;--panel:#121E2E;--panel-2:#0E1A29;--sidebar:#070C16;--ink:#EAF1FF;--ink-soft:#A2B0C8;--ink-faint:#6B7A94;--line:#22314A;--line-soft:#1A2740;--ok:#3FCB90;--ok-bg:#0F3327;--warn:#E7B14C;--warn-bg:#37290F;--info:#5CB6F5;--info-bg:#0C2A42;--urgent:#FF6A50;--urgent-bg:#3A1712;--blue:#33ADFF;--blue-deep:#66C2FF;--flame:#FF5638;}
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased; }
+  h1,h2,h3,h4 { font-family:var(--font-display); font-weight:800; margin:0; letter-spacing:-.01em; }
+  a { color:inherit; text-decoration:none; }
+  svg { display:block; }
+  table { border-collapse:collapse; }
+  ::selection { background:var(--sun); color:#0C1524; }
+
+  .app { display:grid; grid-template-columns:1fr; min-height:100vh; }
+  @media (min-width:1000px){ .app { grid-template-columns:246px 1fr; } }
+
+  /* Sidebar */
+  .side { background:var(--sidebar); color:#C3CEE2; padding:1.1rem 1rem; display:none; flex-direction:column; gap:.2rem; position:sticky; top:0; height:100vh; }
+  @media (min-width:1000px){ .side { display:flex; } }
+  .side .brand { display:flex; align-items:center; gap:.6rem; padding:.3rem .4rem 1.2rem; } .side .brand { color:#fff; }
+  .tile { flex:none; width:36px; height:36px; border-radius:24%; background:var(--blue); display:grid; place-items:center; }
+  .side .brand b { font-family:var(--font-display); font-weight:800; font-size:1.02rem; color:#fff; letter-spacing:-.01em; }
+  .side .brand b i { color:var(--flame); font-style:normal; }
+  .side .grp { font-size:.68rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#5C6a86; margin:1rem .5rem .4rem; }
+  .nav-item { display:flex; align-items:center; gap:.7rem; padding:.6rem .65rem; border-radius:10px; font-weight:600; font-size:.92rem; color:#AEBAD2; cursor:pointer; border:none; background:none; width:100%; text-align:left; transition:background .15s,color .15s; }
+  .nav-item svg { width:18px; height:18px; flex:none; color:#7C89A8; }
+  .nav-item:hover { background:rgba(255,255,255,.06); color:#fff; }
+  .nav-item.active { background:var(--blue); color:#fff; }
+  .nav-item.active svg { color:#fff; }
+  .nav-item .count { margin-left:auto; font-size:.72rem; font-weight:800; background:var(--flame); color:#fff; border-radius:999px; padding:.05rem .42rem; }
+  .side-foot { margin-top:auto; display:flex; align-items:center; gap:.6rem; padding:.7rem .5rem 0; border-top:1px solid rgba(255,255,255,.08); }
+  .side-foot .av { width:32px; height:32px; border-radius:50%; background:var(--flame); color:#fff; display:grid; place-items:center; font-weight:800; font-size:.8rem; }
+  .side-foot small { display:block; color:#7C89A8; font-size:.74rem; }
+  .side-foot b { font-size:.85rem; color:#fff; font-weight:700; }
+
+  /* Main */
+  .main { min-width:0; display:flex; flex-direction:column; }
+  .topbar { background:var(--panel); border-bottom:1px solid var(--line); padding:.9rem 1.3rem; display:flex; align-items:center; gap:1rem; position:sticky; top:0; z-index:20; }
+  .topbar .mtile { display:flex; align-items:center; gap:.5rem; }
+  .topbar .mtile .tile { width:30px; height:30px; }
+  .topbar .mtile b { font-family:var(--font-display); font-weight:800; }
+  .topbar .mtile b i { color:var(--flame); font-style:normal; }
+  @media (min-width:1000px){ .topbar .mtile { display:none; } }
+  .topbar h1 { font-size:1.12rem; }
+  .topbar .sub { color:var(--ink-faint); font-size:.82rem; font-weight:500; margin-top:.05rem; }
+  .topbar .spacer { flex:1; }
+  .search { display:none; align-items:center; gap:.5rem; background:var(--panel-2); border:1px solid var(--line); border-radius:999px; padding:.45rem .9rem; color:var(--ink-faint); font-size:.86rem; }
+  @media (min-width:720px){ .search { display:flex; } }
+  .search svg { width:15px; height:15px; }
+  .btn { display:inline-flex; align-items:center; gap:.4rem; font-family:var(--font); font-weight:700; font-size:.86rem; padding:.5rem .9rem; border-radius:9px; border:1px solid transparent; cursor:pointer; }
+  .btn svg { width:15px; height:15px; }
+  .btn-primary { background:var(--flame); color:#fff; }
+  .btn-ghost { background:var(--panel); color:var(--ink); border-color:var(--line); }
+  .btn-ghost:hover { border-color:var(--blue); color:var(--blue-deep); }
+
+  .content { padding:1.3rem; display:grid; gap:1.3rem; width:100%; max-width:1400px; margin:0 auto; }
+  @media (min-width:720px){ .content { padding:1.6rem; } }
+  .view { display:none; }
+  .view.show { display:grid; gap:1.3rem; }
+
+  /* Mobile tab bar */
+  .mtabs { display:flex; gap:.4rem; overflow-x:auto; padding-bottom:.2rem; margin:-.2rem 0 0; }
+  @media (min-width:1000px){ .mtabs { display:none; } }
+  .mtab { flex:none; border:1px solid var(--line); background:var(--panel); color:var(--ink-soft); border-radius:999px; padding:.4rem .8rem; font-size:.82rem; font-weight:700; cursor:pointer; }
+  .mtab.active { background:var(--blue); color:#fff; border-color:transparent; }
+
+  /* Stat tiles */
+  .tiles { display:grid; grid-template-columns:repeat(2,1fr); gap:.9rem; }
+  @media (min-width:820px){ .tiles { grid-template-columns:repeat(4,1fr); } }
+  .tile-card { background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:1.1rem; box-shadow:var(--shadow-sm); }
+  .tile-card .top { display:flex; align-items:center; justify-content:space-between; }
+  .tile-card .ic { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; }
+  .tile-card .ic svg { width:18px; height:18px; }
+  .tile-card .n { font-family:var(--font-display); font-size:2rem; font-weight:800; margin-top:.6rem; font-variant-numeric:tabular-nums; }
+  .tile-card .l { color:var(--ink-soft); font-size:.85rem; }
+  .tile-card .delta { font-size:.75rem; font-weight:700; }
+
+  /* Cards / panels */
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow-sm); overflow:hidden; }
+  .panel-head { display:flex; align-items:center; gap:.7rem; padding:1rem 1.2rem; border-bottom:1px solid var(--line); }
+  .panel-head h3 { font-size:1.02rem; }
+  .panel-head .hint { color:var(--ink-faint); font-size:.8rem; }
+  .panel-head .spacer { flex:1; }
+  .cols { display:grid; grid-template-columns:1fr; gap:1.3rem; }
+  @media (min-width:980px){ .cols.two { grid-template-columns:1.5fr 1fr; } }
+
+  /* Tables */
+  .tbl-scroll { overflow-x:auto; }
+  table.data { width:100%; font-size:.87rem; min-width:640px; }
+  table.data th { text-align:left; font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); font-weight:800; padding:.7rem 1.1rem; border-bottom:1px solid var(--line); background:var(--panel-2); position:sticky; top:0; }
+  table.data td { padding:.75rem 1.1rem; border-bottom:1px solid var(--line-soft); vertical-align:middle; }
+  table.data tr:last-child td { border-bottom:none; }
+  table.data tr:hover td { background:var(--panel-2); }
+  .who { display:flex; align-items:center; gap:.6rem; }
+  .who .av { width:32px; height:32px; border-radius:30%; flex:none; display:grid; place-items:center; color:#fff; font-weight:800; font-size:.78rem; }
+  .who b { font-weight:700; }
+  .who small { display:block; color:var(--ink-faint); font-size:.76rem; }
+  .subj { display:inline-flex; flex-wrap:wrap; gap:.25rem; }
+  .subj span { font-size:.72rem; font-weight:600; background:var(--panel-2); border:1px solid var(--line); border-radius:999px; padding:.12rem .5rem; color:var(--ink-soft); }
+  .phone { font-variant-numeric:tabular-nums; font-weight:600; color:var(--ink); }
+  .muted { color:var(--ink-faint); }
+
+  /* Status pills */
+  .pill { display:inline-flex; align-items:center; gap:.35rem; font-size:.74rem; font-weight:800; padding:.2rem .55rem; border-radius:999px; white-space:nowrap; }
+  .pill::before { content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .p-ok { color:var(--ok); background:var(--ok-bg); }
+  .p-warn { color:var(--warn); background:var(--warn-bg); }
+  .p-info { color:var(--info); background:var(--info-bg); }
+  .p-urgent { color:var(--urgent); background:var(--urgent-bg); }
+  .p-mut { color:var(--ink-faint); background:var(--panel-2); }
+
+  .slotchip { display:inline-flex; align-items:center; gap:.3rem; font-size:.76rem; font-weight:600; color:var(--ink-soft); }
+  .slotchip svg { width:13px; height:13px; color:var(--ink-faint); }
+
+  .rowbtn { border:1px solid var(--line); background:var(--panel); border-radius:8px; padding:.35rem .6rem; font-size:.76rem; font-weight:700; cursor:pointer; color:var(--ink-soft); }
+  .rowbtn:hover { border-color:var(--blue); color:var(--blue-deep); }
+
+  /* ===== Schedule grid (the core: who visits whom, when) ===== */
+  .legend { display:flex; flex-wrap:wrap; gap:.5rem 1rem; padding:.4rem 0 0; }
+  .legend span { display:inline-flex; align-items:center; gap:.4rem; font-size:.78rem; color:var(--ink-soft); font-weight:600; }
+  .legend i { width:12px; height:12px; border-radius:4px; display:inline-block; }
+  .sched-scroll { overflow-x:auto; }
+  .sched { min-width:920px; display:grid; grid-template-columns:96px repeat(7,1fr); }
+  .sched .cell { border-right:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft); min-height:64px; padding:.35rem; }
+  .sched .cell:nth-child(8n+1) { border-right:1px solid var(--line); }
+  .sched .head { background:var(--panel-2); font-weight:800; font-size:.76rem; text-align:center; padding:.6rem .3rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; border-bottom:1px solid var(--line); min-height:auto; }
+  .sched .head small { display:block; font-weight:600; color:var(--ink-faint); font-size:.68rem; text-transform:none; letter-spacing:0; }
+  .sched .rowlabel { background:var(--panel-2); font-weight:800; font-size:.74rem; color:var(--ink-soft); display:flex; flex-direction:column; justify-content:center; padding:.5rem; text-align:right; }
+  .sched .rowlabel small { font-weight:600; color:var(--ink-faint); font-size:.68rem; }
+  .sess { border-radius:8px; padding:.35rem .45rem; font-size:.74rem; margin-bottom:.3rem; border-left:3px solid; background:var(--panel-2); cursor:pointer; }
+  .sess:last-child { margin-bottom:0; }
+  .sess b { font-weight:800; display:block; font-size:.76rem; }
+  .sess small { color:var(--ink-soft); display:block; }
+  .sess .tut { display:flex; align-items:center; gap:.3rem; margin-top:.15rem; font-weight:600; color:var(--ink-soft); }
+  .sess .tut i { width:8px; height:8px; border-radius:50%; flex:none; }
+  /* tutor colour keys */
+  .k-blue { border-color:#0099FF; } .k-blue i,.k-blue .dotc{ background:#0099FF; }
+  .k-green{ border-color:#12885A; } .k-green i{ background:#12885A; }
+  .k-flame{ border-color:#FF3210; } .k-flame i{ background:#FF3210; }
+  .k-purple{ border-color:#8A1FD1; } .k-purple i{ background:#8A1FD1; }
+  .k-teal{ border-color:#0A6FC2; } .k-teal i{ background:#0A6FC2; }
+  .k-amber{ border-color:#D97C10; } .k-amber i{ background:#D97C10; }
+
+  /* Today list */
+  .today { display:grid; gap:.6rem; padding:1rem 1.2rem; }
+  .visit { display:flex; align-items:center; gap:.8rem; padding:.7rem; border:1px solid var(--line); border-radius:10px; border-left:3px solid var(--blue); }
+  .visit .tm { font-family:var(--font-display); font-weight:800; font-size:.9rem; width:62px; flex:none; font-variant-numeric:tabular-nums; }
+  .visit .info b { font-weight:700; font-size:.9rem; }
+  .visit .info small { display:block; color:var(--ink-faint); font-size:.78rem; }
+  .visit .spacer { flex:1; }
+
+  .note { font-size:.8rem; color:var(--ink-faint); display:flex; align-items:flex-start; gap:.5rem; padding:.2rem .3rem; }
+  .note svg { width:15px; height:15px; flex:none; margin-top:.1rem; color:var(--blue-deep); }
+
+  .banner { background:linear-gradient(100deg,var(--blue),#0A6FC2); color:#fff; border-radius:var(--r); padding:.9rem 1.2rem; display:flex; align-items:center; gap:.7rem; font-size:.86rem; font-weight:600; }
+  :root[data-theme="dark"] .banner{ background:linear-gradient(100deg,#0B4E85,#0F2036); border:1px solid var(--line); }
+  .banner svg { width:20px; height:20px; flex:none; }
+  .banner .tag { margin-left:auto; font-size:.7rem; font-weight:800; background:rgba(255,255,255,.2); padding:.2rem .55rem; border-radius:999px; }
+</style>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div class="brand"><svg style="height:30px;width:auto;display:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1069.24 297.12" role="img" aria-label="Ace Home Tutors"><rect fill="#0099FF" x="0" y="44.68" width="191.35" height="191.35" rx="34.48" ry="34.48"/><path fill="#FBFF64" d="M173.83,141.93l-16.6,42.19-1.17,3-1.27,3.2-8.49,21.58c-.93,2.37-2.84,4.21-5.23,5.06-.95.33-1.94.5-2.93.5-1.5,0-2.99-.38-4.32-1.14l-2.27-1.29c-3.08-1.74-8.07-3.85-14.42-4.01-.31,0-.59,0-.87,0-4.97,0-9.76,1.18-14.23,3.52-.32.18-.62.34-.91.51l-1.11.63c-1.34.76-2.83,1.14-4.33,1.14s-2.98-.38-4.32-1.14l-1.13-.64c-.28-.17-.59-.32-.9-.5-3.07-1.61-8.01-3.52-14.23-3.52-.27,0-.55,0-.83,0-6.4.16-11.39,2.26-14.45,4.01l-2.26,1.28c-1.33.76-2.83,1.15-4.33,1.15-.99,0-1.97-.16-2.92-.5-2.4-.84-4.31-2.69-5.24-5.06l-8.5-21.6-1.24-3.13-1.2-3.09-16.59-42.15c-1.46-3.73-.22-7.97,3.02-10.32l1.39-1c.28-.2.58-.41.89-.63-.66-.53-1.24-1.16-1.74-1.89l-2.68-3.97c-1.3-1.93-1.78-4.29-1.33-6.58.45-2.28,1.77-4.3,3.7-5.59l70-47.19c1.48-1,3.19-1.5,4.9-1.5s3.42.5,4.9,1.5l70,47.19c1.93,1.3,3.26,3.31,3.71,5.59.44,2.29-.04,4.65-1.34,6.58l-2.67,3.97c-.5.74-1.09,1.37-1.74,1.9.3.21.59.41.86.6l1.39.99c3.27,2.34,4.53,6.6,3.06,10.34Z"/><path fill="#FF3210" d="M114.82,124.44c.54-.13,1.1-.27,1.65-.39.84-.19,1.68-.35,2.52-.49.68-2.18,1-4.44,1-6.77,0-13.15-10.91-23.85-24.32-23.85s-24.32,10.7-24.32,23.85c0,2.33.33,4.59,1,6.77.84.15,1.68.32,2.52.51.54.12,1.1.25,1.64.39.38.1,1.06.26,1.03.25-1.14-2.49-1.72-5.15-1.72-7.91,0-10.73,8.91-19.46,19.84-19.46s19.83,8.74,19.83,19.46c0,2.77-.57,5.42-1.71,7.91.34-.09.68-.19,1.02-.27Z"/><path fill="#FF3210" d="M130.67,126.53c-3.92-.08-7.83.23-11.68.9-.84.15-1.68.31-2.52.49-.56.12-1.11.25-1.65.39-.34.08-.68.17-1.02.27-.05.01-.11.03-.16.04-.43.12-.87.25-1.29.37-.45.13-.87.27-1.3.4-1.44.47-2.81.96-4.11,1.49-.72.28-1.42.58-2.1.88-1.21.54-2.34,1.09-3.4,1.65-.41.21-.8.43-1.19.64-.04.03-.09.05-.14.07-.34.2-.68.39-1,.57-.37.21-.73.43-1.07.64-.69.41-1.34.84-1.97,1.24-.14.09-.27.17-.39.27-.12-.09-.26-.17-.39-.27-.62-.4-1.27-.82-1.97-1.24-.34-.21-.7-.43-1.07-.64-.33-.19-.66-.37-1-.57-.04-.01-.09-.04-.14-.07-.39-.21-.79-.43-1.19-.64-1.07-.56-2.2-1.1-3.4-1.65-.68-.29-1.38-.6-2.1-.88-1.03-.41-2.1-.81-3.23-1.2-.42-.13-.85-.28-1.29-.41-.56-.17-1.1-.33-1.67-.49-.56-.16-1.12-.31-1.71-.45-.54-.13-1.1-.27-1.64-.39-.84-.19-1.68-.36-2.52-.51-3.85-.68-7.75-.98-11.68-.9-16.12.36-27.98,7.17-33.61,11.19l-1.38,1,16.6,42.19,1.18,3.03,1.25,3.15,8.5,21.6,2.26-1.29c3.93-2.23,10.34-4.95,18.54-5.15,8.35-.23,15.03,2.22,19.42,4.53.39.21.76.41,1.11.61l1.12.64,1.12-.64c.35-.2.72-.4,1.11-.61,4.41-2.31,11.06-4.76,19.42-4.53,8.2.2,14.6,2.91,18.53,5.15l2.28,1.29,8.5-21.6,1.25-3.15,1.18-3.03,16.6-42.19-1.4-1c-5.63-4.03-17.48-10.84-33.6-11.19ZM93.44,201.89c-1.57-.72-3.35-1.42-5.29-2.02-.42-.13-.84-.27-1.27-.39-1.34-.37-2.77-.7-4.26-.97-.42-.07-.83-.13-1.26-.2-.53-.08-1.06-.15-1.6-.2-.39-.05-.8-.09-1.21-.12-.27-.03-.56-.04-.84-.05-.45-.04-.91-.05-1.37-.07-.8-.03-1.63-.03-2.45-.01-7.69.2-13.96,2.37-18.37,4.53l-10.69-27.19-13.73-34.9c5.64-3.75,15.99-9.07,29.68-9.37,4.93-.12,9.85.44,14.64,1.65.5.12.99.25,1.46.39.24.07.49.13.73.21.31.08.62.17.92.28.39.12.77.24,1.15.37.33.11.65.21.98.33,2.18.77,4.17,1.64,5.98,2.53.39.2.79.39,1.17.59s.75.4,1.1.6c.37.19.72.39,1.06.58.34.2.66.39.99.58.91.55,1.73,1.09,2.48,1.6v61.25ZM146.52,175.2l-10.71,27.19c-4.41-2.17-10.67-4.33-18.35-4.53-.38,0-.76-.01-1.14-.01-.47,0-.94.01-1.4.03-.39.01-.77.03-1.15.05-.26.01-.5.03-.75.05-1.02.07-2.01.19-2.97.32-.5.07-.99.15-1.46.24-.49.08-.96.17-1.42.28-.47.09-.92.2-1.38.32-.43.11-.87.21-1.29.33-.04.01-.07.03-.11.03-.41.12-.81.24-1.21.37-.33.09-.64.2-.95.31-.53.17-1.06.36-1.56.56-.98.37-1.9.76-2.76,1.16v-61.25c.75-.51,1.57-1.05,2.48-1.6.33-.2.65-.39.99-.58.34-.2.69-.4,1.06-.58.35-.2.72-.4,1.1-.6s.77-.39,1.17-.59c1.19-.58,2.48-1.17,3.85-1.71.43-.19.88-.36,1.34-.52.47-.19.96-.36,1.46-.53.47-.16.96-.32,1.45-.47.5-.17,1-.32,1.53-.47l.12-.04c.47-.12.96-.25,1.46-.37l.66-.17c.11-.03.22-.05.33-.08,4.47-1.04,9.05-1.5,13.65-1.4,13.68.31,24.05,5.62,29.68,9.37l-13.73,34.9Z"/><polygon fill="#FF3210" points="95.68 77.79 163 123.18 165.67 119.22 95.68 72.02 25.68 119.22 28.36 123.18 95.68 77.79"/><path fill="#FF3210" d="M314.82,201.21l-16.79,33.3h-78.55l95.34-189.82,95.05,189.82h-78.55l-16.51-33.3Z"/><path fill="#FF3210" d="M504.36,128.35c-3.7-3.7-8.82-5.98-14.51-5.98-11.38,0-20.49,9.11-20.49,20.49s9.11,20.49,20.49,20.49c5.69,0,10.81-2.28,14.51-5.98l54.07,54.36c-17.64,17.36-41.83,28.17-68.59,28.17-53.79,0-97.61-43.54-97.61-97.05s43.83-98.18,97.61-98.18c27.04,0,51.51,11.1,69.16,29.03l-54.64,54.64Z"/><path fill="#FF3210" d="M718.94,234.5h-145.71V50.09h145.71v72.29h-70.58v14.8h70.58v11.38h-70.58v12.52h70.58v73.42Z"/><path fill="currentColor" d="M767.01,134.57V54.4h10.72v33.65h43.84v-33.65h10.6v80.17h-10.6v-37.22h-43.84v37.22h-10.72Z"/><path fill="currentColor" d="M873.07,135.52c-5.68,0-10.54-1.2-14.59-3.6-4.05-2.4-7.14-5.84-9.26-10.3-2.12-4.47-3.19-9.78-3.19-15.93s1.06-11.72,3.19-16.23c2.12-4.51,5.21-7.97,9.26-10.39,4.05-2.42,8.91-3.63,14.59-3.63s10.75,1.21,14.86,3.63c4.11,2.42,7.27,5.89,9.47,10.39,2.2,4.51,3.31,9.92,3.31,16.23s-1.1,11.46-3.31,15.93c-2.2,4.47-5.36,7.9-9.47,10.3-4.11,2.4-9.06,3.6-14.86,3.6ZM873.07,127.6c4.29,0,7.7-.94,10.24-2.83,2.54-1.88,4.37-4.49,5.48-7.8,1.11-3.32,1.67-7.08,1.67-11.29s-.56-8.12-1.67-11.5c-1.11-3.38-2.94-6.03-5.48-7.95-2.54-1.93-5.96-2.89-10.24-2.89s-7.47.96-9.92,2.89-4.2,4.58-5.27,7.95c-1.07,3.38-1.61,7.21-1.61,11.5s.54,7.97,1.61,11.29c1.07,3.32,2.83,5.92,5.27,7.8,2.44,1.89,5.75,2.83,9.92,2.83Z"/><path fill="currentColor" d="M913.56,134.57v-58.01h9.53l.36,8.93c1.71-2.34,4.21-4.56,7.5-6.64,3.29-2.08,7.4-3.13,12.33-3.13,6.43,0,11.06,1.89,13.88,5.66,2.82,3.77,4.23,9.03,4.23,15.78v37.4h-10.01v-35.97c0-2.82-.29-5.32-.86-7.5-.58-2.18-1.64-3.9-3.19-5.15-1.55-1.25-3.77-1.88-6.67-1.88-4.09,0-7.54.98-10.36,2.95-2.82,1.96-5.08,4.12-6.79,6.46v41.1h-9.95ZM989.08,134.57v-35.97c0-2.82-.29-5.32-.86-7.5-.58-2.18-1.64-3.9-3.19-5.15-1.55-1.25-3.75-1.88-6.61-1.88-4.13,0-7.6.96-10.42,2.89-2.82,1.93-5.14,4.06-6.97,6.4l-1.49-7.27c2.3-2.54,5.21-4.9,8.73-7.09,3.51-2.18,7.73-3.28,12.66-3.28,6.43,0,11.06,1.89,13.88,5.66,2.82,3.77,4.23,9.03,4.23,15.78v37.4h-9.95Z"/><path fill="currentColor" d="M1038.69,135.64c-6.31,0-11.49-1.32-15.52-3.96-4.03-2.64-7.02-6.23-8.96-10.78-1.95-4.55-2.92-9.66-2.92-15.34s.94-11.13,2.83-15.63c1.88-4.51,4.76-8.03,8.64-10.57s8.79-3.81,14.74-3.81c7.9,0,14.09,2.38,18.58,7.15,4.49,4.76,6.73,11.61,6.73,20.55,0,.6-.02,1.3-.06,2.11-.04.81-.1,1.4-.18,1.76h-41.33c.04,3.77.64,7.24,1.82,10.39,1.17,3.16,3.03,5.69,5.57,7.59,2.54,1.91,5.9,2.86,10.07,2.86,4.45,0,7.92-1.04,10.42-3.13,2.5-2.08,3.81-5.09,3.93-9.02h9.83c-.12,4.09-1.17,7.61-3.16,10.57-1.99,2.96-4.77,5.24-8.34,6.85-3.57,1.61-7.8,2.41-12.69,2.41ZM1021.29,99.85h31.69c-.12-5.4-1.53-9.53-4.23-12.39-2.7-2.86-6.45-4.29-11.26-4.29s-8.65,1.42-11.41,4.26-4.36,6.98-4.79,12.42Z"/><path fill="currentColor" d="M780.41,234.94v-71.17h-22.81v-8.99h56.22v8.99h-22.75v71.17h-10.66Z"/><path fill="currentColor" d="M835.55,235.83c-6.71,0-11.55-1.87-14.53-5.6-2.98-3.73-4.47-8.87-4.47-15.43v-37.88h10.01v36.51c0,2.62.3,4.96.89,7.03s1.73,3.67,3.4,4.82c1.67,1.15,4.07,1.73,7.21,1.73,4.37,0,8.02-.9,10.96-2.71s5.3-3.9,7.09-6.28v-41.1h10.01v58.01h-9.59l-.3-8.93c-1.87,2.3-4.5,4.52-7.89,6.64-3.4,2.12-7.65,3.19-12.78,3.19Z"/><path fill="currentColor" d="M901.29,234.94c-4.69,0-8.28-.74-10.78-2.23-2.5-1.49-4.22-3.63-5.15-6.43-.93-2.8-1.4-6.16-1.4-10.09v-31.21h-9.71v-8.04h9.71v-13.28h9.89v13.28h14.29v8.04h-14.29v30.73c0,3.61.47,6.38,1.4,8.31.93,1.93,3.17,2.89,6.7,2.89h6.31v8.04h-6.97Z"/><path fill="currentColor" d="M941.48,235.89c-5.68,0-10.54-1.2-14.59-3.6-4.05-2.4-7.14-5.84-9.26-10.3-2.12-4.47-3.19-9.78-3.19-15.93s1.06-11.72,3.19-16.23c2.12-4.51,5.21-7.97,9.26-10.39,4.05-2.42,8.91-3.63,14.59-3.63s10.75,1.21,14.86,3.63c4.11,2.42,7.27,5.89,9.47,10.39,2.2,4.51,3.31,9.92,3.31,16.23s-1.1,11.46-3.31,15.93c-2.2,4.47-5.36,7.9-9.47,10.3-4.11,2.4-9.06,3.6-14.86,3.6ZM941.48,227.97c4.29,0,7.7-.94,10.24-2.83,2.54-1.88,4.37-4.49,5.48-7.8,1.11-3.32,1.67-7.08,1.67-11.29s-.56-8.12-1.67-11.5c-1.11-3.38-2.94-6.03-5.48-7.95-2.54-1.93-5.96-2.89-10.24-2.89s-7.47.96-9.92,2.89-4.2,4.58-5.27,7.95c-1.07,3.38-1.61,7.21-1.61,11.5s.54,7.97,1.61,11.29c1.07,3.32,2.83,5.92,5.27,7.8,2.44,1.89,5.75,2.83,9.92,2.83Z"/><path fill="currentColor" d="M981.97,234.94v-58.01h9.35l.36,9.89c1.63-3.02,3.89-5.54,6.79-7.56,2.9-2.03,6.67-3.04,11.32-3.04h1.19v9.11h-1.37c-2.9,0-5.44.38-7.62,1.13-2.18.75-4.09,1.8-5.72,3.13-1.63,1.33-3.08,2.87-4.35,4.62v40.74h-9.95Z"/><path fill="currentColor" d="M1039.08,236.01c-3.26,0-6.34-.36-9.26-1.07-2.92-.71-5.49-1.85-7.71-3.39-2.22-1.55-3.96-3.58-5.21-6.11-1.25-2.52-1.88-5.57-1.88-9.14h9.59c0,4.53,1.4,7.71,4.2,9.56,2.8,1.85,6.3,2.77,10.51,2.77,3.77,0,6.88-.72,9.32-2.17,2.44-1.45,3.66-3.84,3.66-7.18,0-2.86-1.1-4.98-3.31-6.37-2.2-1.39-6.08-2.74-11.64-4.05-4.53-1.07-8.34-2.31-11.44-3.72-3.1-1.41-5.42-3.2-6.97-5.36-1.55-2.16-2.32-4.89-2.32-8.19,0-2.58.54-4.85,1.64-6.82,1.09-1.97,2.62-3.6,4.59-4.91,1.96-1.31,4.28-2.29,6.94-2.95,2.66-.66,5.54-.98,8.64-.98s5.93.36,8.61,1.07c2.68.71,5.04,1.83,7.09,3.33,2.04,1.51,3.66,3.46,4.85,5.84,1.19,2.38,1.79,5.24,1.79,8.58h-9.65c0-4.13-1.23-7.05-3.69-8.76-2.46-1.71-5.46-2.56-8.99-2.56s-6.47.64-8.7,1.91c-2.22,1.27-3.33,3.26-3.33,5.96,0,1.55.5,2.86,1.49,3.93.99,1.07,2.66,2.04,5,2.89s5.5,1.76,9.47,2.71c4.33,1.03,7.96,2.26,10.9,3.69,2.94,1.43,5.15,3.27,6.64,5.51,1.49,2.24,2.23,5.11,2.23,8.61,0,3.02-.59,5.63-1.76,7.83-1.17,2.2-2.8,4.01-4.88,5.42-2.08,1.41-4.53,2.45-7.33,3.13s-5.83,1.01-9.08,1.01Z"/></svg></div>
+
+    <div class="grp">Operations</div>
+    <button class="nav-item active" data-view="overview"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="12" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg> Overview</button>
+    <button class="nav-item" data-view="schedule"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Schedule <span class="count">18</span></button>
+
+    <div class="grp">Records</div>
+    <button class="nav-item" data-view="tutors"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Tutors <span class="count" style="background:#B7791F;">3</span></button>
+    <button class="nav-item" data-view="requirements"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l4 4v14H6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v5h5M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Requirements <span class="count">5</span></button>
+    <button class="nav-item" data-view="demos"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5v14h16V5zM4 9h16" stroke="currentColor" stroke-width="1.8"/><path d="m9 14 2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Demo bookings</button>
+
+    <div class="side-foot">
+      <span class="av">SA</span>
+      <div><b>Site Admin</b><small>Navi Mumbai bureau</small></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <a class="mtile" href="#"><svg style="height:24px;width:auto;display:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1069.24 297.12" role="img" aria-label="Ace Home Tutors"><rect fill="#0099FF" x="0" y="44.68" width="191.35" height="191.35" rx="34.48" ry="34.48"/><path fill="#FBFF64" d="M173.83,141.93l-16.6,42.19-1.17,3-1.27,3.2-8.49,21.58c-.93,2.37-2.84,4.21-5.23,5.06-.95.33-1.94.5-2.93.5-1.5,0-2.99-.38-4.32-1.14l-2.27-1.29c-3.08-1.74-8.07-3.85-14.42-4.01-.31,0-.59,0-.87,0-4.97,0-9.76,1.18-14.23,3.52-.32.18-.62.34-.91.51l-1.11.63c-1.34.76-2.83,1.14-4.33,1.14s-2.98-.38-4.32-1.14l-1.13-.64c-.28-.17-.59-.32-.9-.5-3.07-1.61-8.01-3.52-14.23-3.52-.27,0-.55,0-.83,0-6.4.16-11.39,2.26-14.45,4.01l-2.26,1.28c-1.33.76-2.83,1.15-4.33,1.15-.99,0-1.97-.16-2.92-.5-2.4-.84-4.31-2.69-5.24-5.06l-8.5-21.6-1.24-3.13-1.2-3.09-16.59-42.15c-1.46-3.73-.22-7.97,3.02-10.32l1.39-1c.28-.2.58-.41.89-.63-.66-.53-1.24-1.16-1.74-1.89l-2.68-3.97c-1.3-1.93-1.78-4.29-1.33-6.58.45-2.28,1.77-4.3,3.7-5.59l70-47.19c1.48-1,3.19-1.5,4.9-1.5s3.42.5,4.9,1.5l70,47.19c1.93,1.3,3.26,3.31,3.71,5.59.44,2.29-.04,4.65-1.34,6.58l-2.67,3.97c-.5.74-1.09,1.37-1.74,1.9.3.21.59.41.86.6l1.39.99c3.27,2.34,4.53,6.6,3.06,10.34Z"/><path fill="#FF3210" d="M114.82,124.44c.54-.13,1.1-.27,1.65-.39.84-.19,1.68-.35,2.52-.49.68-2.18,1-4.44,1-6.77,0-13.15-10.91-23.85-24.32-23.85s-24.32,10.7-24.32,23.85c0,2.33.33,4.59,1,6.77.84.15,1.68.32,2.52.51.54.12,1.1.25,1.64.39.38.1,1.06.26,1.03.25-1.14-2.49-1.72-5.15-1.72-7.91,0-10.73,8.91-19.46,19.84-19.46s19.83,8.74,19.83,19.46c0,2.77-.57,5.42-1.71,7.91.34-.09.68-.19,1.02-.27Z"/><path fill="#FF3210" d="M130.67,126.53c-3.92-.08-7.83.23-11.68.9-.84.15-1.68.31-2.52.49-.56.12-1.11.25-1.65.39-.34.08-.68.17-1.02.27-.05.01-.11.03-.16.04-.43.12-.87.25-1.29.37-.45.13-.87.27-1.3.4-1.44.47-2.81.96-4.11,1.49-.72.28-1.42.58-2.1.88-1.21.54-2.34,1.09-3.4,1.65-.41.21-.8.43-1.19.64-.04.03-.09.05-.14.07-.34.2-.68.39-1,.57-.37.21-.73.43-1.07.64-.69.41-1.34.84-1.97,1.24-.14.09-.27.17-.39.27-.12-.09-.26-.17-.39-.27-.62-.4-1.27-.82-1.97-1.24-.34-.21-.7-.43-1.07-.64-.33-.19-.66-.37-1-.57-.04-.01-.09-.04-.14-.07-.39-.21-.79-.43-1.19-.64-1.07-.56-2.2-1.1-3.4-1.65-.68-.29-1.38-.6-2.1-.88-1.03-.41-2.1-.81-3.23-1.2-.42-.13-.85-.28-1.29-.41-.56-.17-1.1-.33-1.67-.49-.56-.16-1.12-.31-1.71-.45-.54-.13-1.1-.27-1.64-.39-.84-.19-1.68-.36-2.52-.51-3.85-.68-7.75-.98-11.68-.9-16.12.36-27.98,7.17-33.61,11.19l-1.38,1,16.6,42.19,1.18,3.03,1.25,3.15,8.5,21.6,2.26-1.29c3.93-2.23,10.34-4.95,18.54-5.15,8.35-.23,15.03,2.22,19.42,4.53.39.21.76.41,1.11.61l1.12.64,1.12-.64c.35-.2.72-.4,1.11-.61,4.41-2.31,11.06-4.76,19.42-4.53,8.2.2,14.6,2.91,18.53,5.15l2.28,1.29,8.5-21.6,1.25-3.15,1.18-3.03,16.6-42.19-1.4-1c-5.63-4.03-17.48-10.84-33.6-11.19ZM93.44,201.89c-1.57-.72-3.35-1.42-5.29-2.02-.42-.13-.84-.27-1.27-.39-1.34-.37-2.77-.7-4.26-.97-.42-.07-.83-.13-1.26-.2-.53-.08-1.06-.15-1.6-.2-.39-.05-.8-.09-1.21-.12-.27-.03-.56-.04-.84-.05-.45-.04-.91-.05-1.37-.07-.8-.03-1.63-.03-2.45-.01-7.69.2-13.96,2.37-18.37,4.53l-10.69-27.19-13.73-34.9c5.64-3.75,15.99-9.07,29.68-9.37,4.93-.12,9.85.44,14.64,1.65.5.12.99.25,1.46.39.24.07.49.13.73.21.31.08.62.17.92.28.39.12.77.24,1.15.37.33.11.65.21.98.33,2.18.77,4.17,1.64,5.98,2.53.39.2.79.39,1.17.59s.75.4,1.1.6c.37.19.72.39,1.06.58.34.2.66.39.99.58.91.55,1.73,1.09,2.48,1.6v61.25ZM146.52,175.2l-10.71,27.19c-4.41-2.17-10.67-4.33-18.35-4.53-.38,0-.76-.01-1.14-.01-.47,0-.94.01-1.4.03-.39.01-.77.03-1.15.05-.26.01-.5.03-.75.05-1.02.07-2.01.19-2.97.32-.5.07-.99.15-1.46.24-.49.08-.96.17-1.42.28-.47.09-.92.2-1.38.32-.43.11-.87.21-1.29.33-.04.01-.07.03-.11.03-.41.12-.81.24-1.21.37-.33.09-.64.2-.95.31-.53.17-1.06.36-1.56.56-.98.37-1.9.76-2.76,1.16v-61.25c.75-.51,1.57-1.05,2.48-1.6.33-.2.65-.39.99-.58.34-.2.69-.4,1.06-.58.35-.2.72-.4,1.1-.6s.77-.39,1.17-.59c1.19-.58,2.48-1.17,3.85-1.71.43-.19.88-.36,1.34-.52.47-.19.96-.36,1.46-.53.47-.16.96-.32,1.45-.47.5-.17,1-.32,1.53-.47l.12-.04c.47-.12.96-.25,1.46-.37l.66-.17c.11-.03.22-.05.33-.08,4.47-1.04,9.05-1.5,13.65-1.4,13.68.31,24.05,5.62,29.68,9.37l-13.73,34.9Z"/><polygon fill="#FF3210" points="95.68 77.79 163 123.18 165.67 119.22 95.68 72.02 25.68 119.22 28.36 123.18 95.68 77.79"/><path fill="#FF3210" d="M314.82,201.21l-16.79,33.3h-78.55l95.34-189.82,95.05,189.82h-78.55l-16.51-33.3Z"/><path fill="#FF3210" d="M504.36,128.35c-3.7-3.7-8.82-5.98-14.51-5.98-11.38,0-20.49,9.11-20.49,20.49s9.11,20.49,20.49,20.49c5.69,0,10.81-2.28,14.51-5.98l54.07,54.36c-17.64,17.36-41.83,28.17-68.59,28.17-53.79,0-97.61-43.54-97.61-97.05s43.83-98.18,97.61-98.18c27.04,0,51.51,11.1,69.16,29.03l-54.64,54.64Z"/><path fill="#FF3210" d="M718.94,234.5h-145.71V50.09h145.71v72.29h-70.58v14.8h70.58v11.38h-70.58v12.52h70.58v73.42Z"/><path fill="currentColor" d="M767.01,134.57V54.4h10.72v33.65h43.84v-33.65h10.6v80.17h-10.6v-37.22h-43.84v37.22h-10.72Z"/><path fill="currentColor" d="M873.07,135.52c-5.68,0-10.54-1.2-14.59-3.6-4.05-2.4-7.14-5.84-9.26-10.3-2.12-4.47-3.19-9.78-3.19-15.93s1.06-11.72,3.19-16.23c2.12-4.51,5.21-7.97,9.26-10.39,4.05-2.42,8.91-3.63,14.59-3.63s10.75,1.21,14.86,3.63c4.11,2.42,7.27,5.89,9.47,10.39,2.2,4.51,3.31,9.92,3.31,16.23s-1.1,11.46-3.31,15.93c-2.2,4.47-5.36,7.9-9.47,10.3-4.11,2.4-9.06,3.6-14.86,3.6ZM873.07,127.6c4.29,0,7.7-.94,10.24-2.83,2.54-1.88,4.37-4.49,5.48-7.8,1.11-3.32,1.67-7.08,1.67-11.29s-.56-8.12-1.67-11.5c-1.11-3.38-2.94-6.03-5.48-7.95-2.54-1.93-5.96-2.89-10.24-2.89s-7.47.96-9.92,2.89-4.2,4.58-5.27,7.95c-1.07,3.38-1.61,7.21-1.61,11.5s.54,7.97,1.61,11.29c1.07,3.32,2.83,5.92,5.27,7.8,2.44,1.89,5.75,2.83,9.92,2.83Z"/><path fill="currentColor" d="M913.56,134.57v-58.01h9.53l.36,8.93c1.71-2.34,4.21-4.56,7.5-6.64,3.29-2.08,7.4-3.13,12.33-3.13,6.43,0,11.06,1.89,13.88,5.66,2.82,3.77,4.23,9.03,4.23,15.78v37.4h-10.01v-35.97c0-2.82-.29-5.32-.86-7.5-.58-2.18-1.64-3.9-3.19-5.15-1.55-1.25-3.77-1.88-6.67-1.88-4.09,0-7.54.98-10.36,2.95-2.82,1.96-5.08,4.12-6.79,6.46v41.1h-9.95ZM989.08,134.57v-35.97c0-2.82-.29-5.32-.86-7.5-.58-2.18-1.64-3.9-3.19-5.15-1.55-1.25-3.75-1.88-6.61-1.88-4.13,0-7.6.96-10.42,2.89-2.82,1.93-5.14,4.06-6.97,6.4l-1.49-7.27c2.3-2.54,5.21-4.9,8.73-7.09,3.51-2.18,7.73-3.28,12.66-3.28,6.43,0,11.06,1.89,13.88,5.66,2.82,3.77,4.23,9.03,4.23,15.78v37.4h-9.95Z"/><path fill="currentColor" d="M1038.69,135.64c-6.31,0-11.49-1.32-15.52-3.96-4.03-2.64-7.02-6.23-8.96-10.78-1.95-4.55-2.92-9.66-2.92-15.34s.94-11.13,2.83-15.63c1.88-4.51,4.76-8.03,8.64-10.57s8.79-3.81,14.74-3.81c7.9,0,14.09,2.38,18.58,7.15,4.49,4.76,6.73,11.61,6.73,20.55,0,.6-.02,1.3-.06,2.11-.04.81-.1,1.4-.18,1.76h-41.33c.04,3.77.64,7.24,1.82,10.39,1.17,3.16,3.03,5.69,5.57,7.59,2.54,1.91,5.9,2.86,10.07,2.86,4.45,0,7.92-1.04,10.42-3.13,2.5-2.08,3.81-5.09,3.93-9.02h9.83c-.12,4.09-1.17,7.61-3.16,10.57-1.99,2.96-4.77,5.24-8.34,6.85-3.57,1.61-7.8,2.41-12.69,2.41ZM1021.29,99.85h31.69c-.12-5.4-1.53-9.53-4.23-12.39-2.7-2.86-6.45-4.29-11.26-4.29s-8.65,1.42-11.41,4.26-4.36,6.98-4.79,12.42Z"/><path fill="currentColor" d="M780.41,234.94v-71.17h-22.81v-8.99h56.22v8.99h-22.75v71.17h-10.66Z"/><path fill="currentColor" d="M835.55,235.83c-6.71,0-11.55-1.87-14.53-5.6-2.98-3.73-4.47-8.87-4.47-15.43v-37.88h10.01v36.51c0,2.62.3,4.96.89,7.03s1.73,3.67,3.4,4.82c1.67,1.15,4.07,1.73,7.21,1.73,4.37,0,8.02-.9,10.96-2.71s5.3-3.9,7.09-6.28v-41.1h10.01v58.01h-9.59l-.3-8.93c-1.87,2.3-4.5,4.52-7.89,6.64-3.4,2.12-7.65,3.19-12.78,3.19Z"/><path fill="currentColor" d="M901.29,234.94c-4.69,0-8.28-.74-10.78-2.23-2.5-1.49-4.22-3.63-5.15-6.43-.93-2.8-1.4-6.16-1.4-10.09v-31.21h-9.71v-8.04h9.71v-13.28h9.89v13.28h14.29v8.04h-14.29v30.73c0,3.61.47,6.38,1.4,8.31.93,1.93,3.17,2.89,6.7,2.89h6.31v8.04h-6.97Z"/><path fill="currentColor" d="M941.48,235.89c-5.68,0-10.54-1.2-14.59-3.6-4.05-2.4-7.14-5.84-9.26-10.3-2.12-4.47-3.19-9.78-3.19-15.93s1.06-11.72,3.19-16.23c2.12-4.51,5.21-7.97,9.26-10.39,4.05-2.42,8.91-3.63,14.59-3.63s10.75,1.21,14.86,3.63c4.11,2.42,7.27,5.89,9.47,10.39,2.2,4.51,3.31,9.92,3.31,16.23s-1.1,11.46-3.31,15.93c-2.2,4.47-5.36,7.9-9.47,10.3-4.11,2.4-9.06,3.6-14.86,3.6ZM941.48,227.97c4.29,0,7.7-.94,10.24-2.83,2.54-1.88,4.37-4.49,5.48-7.8,1.11-3.32,1.67-7.08,1.67-11.29s-.56-8.12-1.67-11.5c-1.11-3.38-2.94-6.03-5.48-7.95-2.54-1.93-5.96-2.89-10.24-2.89s-7.47.96-9.92,2.89-4.2,4.58-5.27,7.95c-1.07,3.38-1.61,7.21-1.61,11.5s.54,7.97,1.61,11.29c1.07,3.32,2.83,5.92,5.27,7.8,2.44,1.89,5.75,2.83,9.92,2.83Z"/><path fill="currentColor" d="M981.97,234.94v-58.01h9.35l.36,9.89c1.63-3.02,3.89-5.54,6.79-7.56,2.9-2.03,6.67-3.04,11.32-3.04h1.19v9.11h-1.37c-2.9,0-5.44.38-7.62,1.13-2.18.75-4.09,1.8-5.72,3.13-1.63,1.33-3.08,2.87-4.35,4.62v40.74h-9.95Z"/><path fill="currentColor" d="M1039.08,236.01c-3.26,0-6.34-.36-9.26-1.07-2.92-.71-5.49-1.85-7.71-3.39-2.22-1.55-3.96-3.58-5.21-6.11-1.25-2.52-1.88-5.57-1.88-9.14h9.59c0,4.53,1.4,7.71,4.2,9.56,2.8,1.85,6.3,2.77,10.51,2.77,3.77,0,6.88-.72,9.32-2.17,2.44-1.45,3.66-3.84,3.66-7.18,0-2.86-1.1-4.98-3.31-6.37-2.2-1.39-6.08-2.74-11.64-4.05-4.53-1.07-8.34-2.31-11.44-3.72-3.1-1.41-5.42-3.2-6.97-5.36-1.55-2.16-2.32-4.89-2.32-8.19,0-2.58.54-4.85,1.64-6.82,1.09-1.97,2.62-3.6,4.59-4.91,1.96-1.31,4.28-2.29,6.94-2.95,2.66-.66,5.54-.98,8.64-.98s5.93.36,8.61,1.07c2.68.71,5.04,1.83,7.09,3.33,2.04,1.51,3.66,3.46,4.85,5.84,1.19,2.38,1.79,5.24,1.79,8.58h-9.65c0-4.13-1.23-7.05-3.69-8.76-2.46-1.71-5.46-2.56-8.99-2.56s-6.47.64-8.7,1.91c-2.22,1.27-3.33,3.26-3.33,5.96,0,1.55.5,2.86,1.49,3.93.99,1.07,2.66,2.04,5,2.89s5.5,1.76,9.47,2.71c4.33,1.03,7.96,2.26,10.9,3.69,2.94,1.43,5.15,3.27,6.64,5.51,1.49,2.24,2.23,5.11,2.23,8.61,0,3.02-.59,5.63-1.76,7.83-1.17,2.2-2.8,4.01-4.88,5.42-2.08,1.41-4.53,2.45-7.33,3.13s-5.83,1.01-9.08,1.01Z"/></svg></a>
+      <div class="tb-title">
+        <h1 id="viewTitle">Overview</h1>
+        <div class="sub" id="viewSub">Monday, 13 July 2026 · everything that needs you today</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Search tutors, students…</div>
+      <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg> New assignment</button>
+    </div>
+
+    <div class="content">
+      <!-- mobile tab bar -->
+      <div class="mtabs">
+        <button class="mtab active" data-view="overview">Overview</button>
+        <button class="mtab" data-view="schedule">Schedule</button>
+        <button class="mtab" data-view="tutors">Tutors</button>
+        <button class="mtab" data-view="requirements">Requirements</button>
+        <button class="mtab" data-view="demos">Demos</button>
+      </div>
+
+      <!-- ===================== OVERVIEW ===================== -->
+      <section class="view show" data-view="overview">
+        <div class="tiles">
+          <div class="tile-card">
+            <div class="top"><span class="ic" style="background:var(--urgent-bg);color:var(--urgent);"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l4 4v14H6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="pill p-urgent">action</span></div>
+            <div class="n">5</div><div class="l">New requirements</div>
+          </div>
+          <div class="tile-card">
+            <div class="top"><span class="ic" style="background:var(--warn-bg);color:var(--warn);"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c1.2-4 4-6 8-6s6.8 2 8 6" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="pill p-warn">review</span></div>
+            <div class="n">3</div><div class="l">Tutors pending approval</div>
+          </div>
+          <div class="tile-card">
+            <div class="top"><span class="ic" style="background:var(--info-bg);color:var(--info);"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="delta" style="color:var(--ok);">this week</span></div>
+            <div class="n">18</div><div class="l">Scheduled visits</div>
+          </div>
+          <div class="tile-card">
+            <div class="top"><span class="ic" style="background:var(--ok-bg);color:var(--ok);"><svg viewBox="0 0 24 24" fill="none"><path d="m9 14 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="delta" style="color:var(--ok);">+2 today</span></div>
+            <div class="n">27</div><div class="l">Active tutor-student pairs</div>
+          </div>
+        </div>
+
+        <div class="cols two">
+          <div class="panel">
+            <div class="panel-head"><h3>Today's visits</h3><span class="hint">Mon · 13 Jul</span><span class="spacer"></span><span class="pill p-info">4 scheduled</span></div>
+            <div class="today">
+              <div class="visit" style="border-left-color:#0099FF;">
+                <span class="tm">4:00 PM</span>
+                <div class="info"><b>Anjali Naik → Aarav Mehta</b><small>Maths · Class IX · Kharghar, Sector 20</small></div>
+                <div class="spacer"></div><span class="pill p-ok">confirmed</span>
+              </div>
+              <div class="visit" style="border-left-color:#0A6FC2;">
+                <span class="tm">5:00 PM</span>
+                <div class="info"><b>Vikram Joshi → Ishaan Verma</b><small>Physics · Class XI (JEE) · Panvel</small></div>
+                <div class="spacer"></div><span class="pill p-ok">confirmed</span>
+              </div>
+              <div class="visit" style="border-left-color:#12885A;">
+                <span class="tm">6:00 PM</span>
+                <div class="info"><b>Rohan Sawant → Diya Sharma</b><small>Chemistry · Class XI (NEET) · Vashi Sector 8</small></div>
+                <div class="spacer"></div><span class="pill p-info">demo</span>
+              </div>
+              <div class="visit" style="border-left-color:#FF3210;">
+                <span class="tm">7:00 PM</span>
+                <div class="info"><b>Farida Khan → Kabir Rao</b><small>English · Class VII · Nerul</small></div>
+                <div class="spacer"></div><span class="pill p-ok">confirmed</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>Needs matching</h3><span class="spacer"></span><span class="pill p-urgent">5 waiting</span></div>
+            <div class="today">
+              <div class="visit" style="border-left-color:var(--urgent);">
+                <div class="info"><b>Sara Ali</b><small>Class X · Maths + Science · Airoli</small></div>
+                <div class="spacer"></div><button class="rowbtn">Find tutor</button>
+              </div>
+              <div class="visit" style="border-left-color:var(--urgent);">
+                <div class="info"><b>Rahul Nair</b><small>Class XII · Accountancy · Kharghar</small></div>
+                <div class="spacer"></div><button class="rowbtn">Find tutor</button>
+              </div>
+              <div class="visit" style="border-left-color:var(--urgent);">
+                <div class="info"><b>Tanvi Deshmukh</b><small>Class VI · All subjects · Vashi</small></div>
+                <div class="spacer"></div><button class="rowbtn">Find tutor</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="note"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8h.01M11 12h1v4h1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> This is a working preview of the admin the client's team will use. All records shown are sample data. The real backend runs inside WordPress admin, same information, standard WP screens.</div>
+      </section>
+
+      <!-- ===================== SCHEDULE ===================== -->
+      <section class="view" data-view="schedule">
+        <div class="banner">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/></svg>
+          The whole point of the backend in one screen: which tutor visits which student, on which day, at what time.
+          <span class="tag">Week of 13 Jul</span>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Weekly visit schedule</h3>
+            <span class="hint">Navi Mumbai · all tutors</span>
+            <span class="spacer"></span>
+            <button class="btn btn-ghost"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg> Add visit</button>
+          </div>
+          <div style="padding:.9rem 1.2rem 0;">
+            <div class="legend">
+              <span><i style="background:#0099FF;"></i> Anjali Naik</span>
+              <span><i style="background:#12885A;"></i> Rohan Sawant</span>
+              <span><i style="background:#FF3210;"></i> Farida Khan</span>
+              <span><i style="background:#0A6FC2;"></i> Vikram Joshi</span>
+              <span><i style="background:#8A1FD1;"></i> Sunita Yadav</span>
+              <span><i style="background:#D97C10;"></i> Mohit Kulkarni</span>
+            </div>
+          </div>
+          <div class="sched-scroll">
+            <div class="sched" style="margin:.9rem 0 0;">
+              <!-- header row -->
+              <div class="cell head" style="text-align:right;">Time</div>
+              <div class="cell head">Mon<small>13</small></div>
+              <div class="cell head">Tue<small>14</small></div>
+              <div class="cell head">Wed<small>15</small></div>
+              <div class="cell head">Thu<small>16</small></div>
+              <div class="cell head">Fri<small>17</small></div>
+              <div class="cell head">Sat<small>18</small></div>
+              <div class="cell head">Sun<small>19</small></div>
+
+              <!-- Morning -->
+              <div class="cell rowlabel">Morning<small>7-11 AM</small></div>
+              <div class="cell"></div>
+              <div class="cell"></div>
+              <div class="cell"></div>
+              <div class="cell"></div>
+              <div class="cell"></div>
+              <div class="cell"><div class="sess k-purple"><b>Rahul Nair</b><small>Accountancy · XII</small><span class="tut"><i></i>Sunita Yadav</span></div></div>
+              <div class="cell"><div class="sess k-teal"><b>Ishaan Verma</b><small>Maths · JEE</small><span class="tut"><i></i>Vikram Joshi</span></div></div>
+
+              <!-- Afternoon -->
+              <div class="cell rowlabel">Afternoon<small>12-4 PM</small></div>
+              <div class="cell"><div class="sess k-blue"><b>Aarav Mehta</b><small>Maths · IX</small><span class="tut"><i></i>Anjali Naik</span></div></div>
+              <div class="cell"></div>
+              <div class="cell"><div class="sess k-blue"><b>Aarav Mehta</b><small>Science · IX</small><span class="tut"><i></i>Anjali Naik</span></div></div>
+              <div class="cell"></div>
+              <div class="cell"><div class="sess k-amber"><b>Sara Ali</b><small>Science · X</small><span class="tut"><i></i>Mohit Kulkarni</span></div></div>
+              <div class="cell"><div class="sess k-flame"><b>Kabir Rao</b><small>English · VII</small><span class="tut"><i></i>Farida Khan</span></div></div>
+              <div class="cell"></div>
+
+              <!-- Evening -->
+              <div class="cell rowlabel">Evening<small>5-8 PM</small></div>
+              <div class="cell">
+                <div class="sess k-teal"><b>Ishaan Verma</b><small>Physics · JEE</small><span class="tut"><i></i>Vikram Joshi</span></div>
+                <div class="sess k-flame"><b>Kabir Rao</b><small>English · VII</small><span class="tut"><i></i>Farida Khan</span></div>
+              </div>
+              <div class="cell"><div class="sess k-green"><b>Diya Sharma</b><small>Chemistry · NEET</small><span class="tut"><i></i>Rohan Sawant</span></div></div>
+              <div class="cell"><div class="sess k-teal"><b>Ishaan Verma</b><small>Maths · JEE</small><span class="tut"><i></i>Vikram Joshi</span></div></div>
+              <div class="cell"><div class="sess k-green"><b>Diya Sharma</b><small>Physics · NEET</small><span class="tut"><i></i>Rohan Sawant</span></div></div>
+              <div class="cell"><div class="sess k-blue"><b>Tanvi Deshmukh</b><small>Maths · VI</small><span class="tut"><i></i>Anjali Naik</span></div></div>
+              <div class="cell"></div>
+              <div class="cell"></div>
+            </div>
+          </div>
+          <div class="note" style="padding:1rem 1.2rem;"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8h.01M11 12h1v4h1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Each card is one home visit: student, subject &amp; class, and the assigned tutor (colour-coded). Admin books a visit by picking a tutor, a student and a free slot. Clashes (same tutor, same time) are flagged automatically.</div>
+        </div>
+      </section>
+
+      <!-- ===================== TUTORS ===================== -->
+      <section class="view" data-view="tutors">
+        <div class="panel">
+          <div class="panel-head"><h3>Tutors</h3><span class="hint">availability &amp; approval</span><span class="spacer"></span><span class="pill p-warn">3 pending</span></div>
+          <div class="tbl-scroll">
+            <table class="data">
+              <thead><tr><th>Tutor</th><th>Contact (private)</th><th>Teaches</th><th>Area</th><th>Available slots</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:#0099FF;">AN</span><b>Anjali Naik</b><small>Class V-VIII · 4 yrs</small></div></td>
+                  <td><span class="phone">+91 98••• ••210</span><br><small class="muted">admin-only</small></td>
+                  <td><span class="subj"><span>Maths</span><span>Science</span><span>English</span></span></td>
+                  <td>Vashi</td>
+                  <td><span class="slotchip"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Mon-Fri · 12-8 PM</span></td>
+                  <td><span class="pill p-ok">approved</span></td>
+                  <td><button class="rowbtn">Edit</button></td>
+                </tr>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:#12885A;">RS</span><b>Rohan Sawant</b><small>Class IX-XII · 7 yrs</small></div></td>
+                  <td><span class="phone">+91 99••• ••847</span><br><small class="muted">admin-only</small></td>
+                  <td><span class="subj"><span>Physics</span><span>Chemistry</span><span>Maths</span></span></td>
+                  <td>Nerul</td>
+                  <td><span class="slotchip"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Daily · 5-8 PM</span></td>
+                  <td><span class="pill p-ok">approved</span></td>
+                  <td><button class="rowbtn">Edit</button></td>
+                </tr>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:#FF3210;">FK</span><b>Farida Khan</b><small>Class V-X · 5 yrs</small></div></td>
+                  <td><span class="phone">+91 98••• ••033</span><br><small class="muted">admin-only</small></td>
+                  <td><span class="subj"><span>English</span><span>Hindi</span><span>SST</span></span></td>
+                  <td>Kharghar</td>
+                  <td><span class="slotchip"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Mon-Sat · 3-7 PM</span></td>
+                  <td><span class="pill p-ok">approved</span></td>
+                  <td><button class="rowbtn">Edit</button></td>
+                </tr>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:#8A1FD1;">PD</span><b>Prakash Dinesh</b><small>Class XI-XII · 11 yrs</small></div></td>
+                  <td><span class="phone">+91 90••• ••556</span><br><small class="muted">admin-only</small></td>
+                  <td><span class="subj"><span>Biology</span><span>NEET</span></span></td>
+                  <td>Kharghar</td>
+                  <td><span class="slotchip"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Weekends · flexible</span></td>
+                  <td><span class="pill p-warn">pending</span></td>
+                  <td><button class="rowbtn" style="border-color:var(--ok);color:var(--ok);">Approve</button></td>
+                </tr>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:#D97C10;">NG</span><b>Neha Gokhale</b><small>Class V-VIII · 2 yrs</small></div></td>
+                  <td><span class="phone">+91 91••• ••418</span><br><small class="muted">admin-only</small></td>
+                  <td><span class="subj"><span>Maths</span><span>EVS</span></span></td>
+                  <td>Airoli</td>
+                  <td><span class="slotchip"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Weekdays · 4-7 PM</span></td>
+                  <td><span class="pill p-warn">pending</span></td>
+                  <td><button class="rowbtn" style="border-color:var(--ok);color:var(--ok);">Approve</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note" style="padding:1rem 1.2rem;"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.8"/></svg> Tutor phone numbers are stored for admin coordination only and are <b>never shown on the public site</b>. Approving a tutor makes their profile live in the directory.</div>
+        </div>
+      </section>
+
+      <!-- ===================== REQUIREMENTS ===================== -->
+      <section class="view" data-view="requirements">
+        <div class="panel">
+          <div class="panel-head"><h3>Student requirements</h3><span class="hint">from "Find a Tutor" form</span><span class="spacer"></span><span class="pill p-urgent">5 new</span></div>
+          <div class="tbl-scroll">
+            <table class="data">
+              <thead><tr><th>Student / Parent</th><th>Contact</th><th>Class</th><th>Subjects</th><th>Area</th><th>Preferred time</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:#0A6FC2;">AM</span><div><b>Aarav Mehta</b><small>Parent: Sanjay Mehta</small></div></div></td>
+                  <td><span class="phone">+91 98••• ••771</span></td>
+                  <td>IX · CBSE</td>
+                  <td><span class="subj"><span>Maths</span><span>Science</span></span></td>
+                  <td>Kharghar</td>
+                  <td><span class="slotchip">Weekdays · Evening</span></td>
+                  <td><span class="pill p-ok">matched</span></td>
+                  <td><button class="rowbtn">Open</button></td>
+                </tr>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:#12885A;">DS</span><div><b>Diya Sharma</b><small>Parent: Meena Sharma</small></div></div></td>
+                  <td><span class="phone">+91 99••• ••204</span></td>
+                  <td>XI · Science</td>
+                  <td><span class="subj"><span>Biology</span><span>Chemistry</span><span>NEET</span></span></td>
+                  <td>Vashi</td>
+                  <td><span class="slotchip">Daily · Evening</span></td>
+                  <td><span class="pill p-info">demo booked</span></td>
+                  <td><button class="rowbtn">Open</button></td>
+                </tr>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:var(--urgent);">SA</span><div><b>Sara Ali</b><small>Parent: Imran Ali</small></div></div></td>
+                  <td><span class="phone">+91 90••• ••389</span></td>
+                  <td>X · ICSE</td>
+                  <td><span class="subj"><span>Maths</span><span>Science</span></span></td>
+                  <td>Airoli</td>
+                  <td><span class="slotchip">Weekdays · Afternoon</span></td>
+                  <td><span class="pill p-urgent">new</span></td>
+                  <td><button class="rowbtn" style="border-color:var(--blue);color:var(--blue-deep);">Match</button></td>
+                </tr>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:var(--urgent);">RN</span><div><b>Rahul Nair</b><small>Self (Class XII)</small></div></div></td>
+                  <td><span class="phone">+91 98••• ••612</span></td>
+                  <td>XII · Commerce</td>
+                  <td><span class="subj"><span>Accountancy</span><span>Economics</span></span></td>
+                  <td>Kharghar</td>
+                  <td><span class="slotchip">Weekends · Morning</span></td>
+                  <td><span class="pill p-urgent">new</span></td>
+                  <td><button class="rowbtn" style="border-color:var(--blue);color:var(--blue-deep);">Match</button></td>
+                </tr>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:var(--urgent);">TD</span><div><b>Tanvi Deshmukh</b><small>Parent: Anita Deshmukh</small></div></div></td>
+                  <td><span class="phone">+91 91••• ••905</span></td>
+                  <td>VI · State</td>
+                  <td><span class="subj"><span>All subjects</span></span></td>
+                  <td>Vashi</td>
+                  <td><span class="slotchip">Weekdays · Evening</span></td>
+                  <td><span class="pill p-warn">contacted</span></td>
+                  <td><button class="rowbtn" style="border-color:var(--blue);color:var(--blue-deep);">Match</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== DEMOS ===================== -->
+      <section class="view" data-view="demos">
+        <div class="panel">
+          <div class="panel-head"><h3>Demo bookings</h3><span class="hint">free trial classes</span><span class="spacer"></span><span class="pill p-info">2 upcoming</span></div>
+          <div class="tbl-scroll">
+            <table class="data">
+              <thead><tr><th>Student</th><th>Tutor</th><th>Subject</th><th>When</th><th>Area</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:#12885A;">DS</span><b>Diya Sharma</b></div></td>
+                  <td>Rohan Sawant</td>
+                  <td><span class="subj"><span>Chemistry</span></span></td>
+                  <td>Mon 13 Jul · 6:00 PM</td>
+                  <td>Vashi</td>
+                  <td><span class="pill p-info">scheduled</span></td>
+                  <td><button class="rowbtn">Open</button></td>
+                </tr>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:#0099FF;">AM</span><b>Aarav Mehta</b></div></td>
+                  <td>Anjali Naik</td>
+                  <td><span class="subj"><span>Maths</span></span></td>
+                  <td>Sat 11 Jul · 4:00 PM</td>
+                  <td>Kharghar</td>
+                  <td><span class="pill p-ok">completed</span></td>
+                  <td><button class="rowbtn">Open</button></td>
+                </tr>
+                <tr>
+                  <td><div class="who"><span class="av" style="background:#8A1FD1;">RN</span><b>Rahul Nair</b></div></td>
+                  <td class="muted">unassigned</td>
+                  <td><span class="subj"><span>Accountancy</span></span></td>
+                  <td>Requested Sun 19 Jul</td>
+                  <td>Kharghar</td>
+                  <td><span class="pill p-warn">needs tutor</span></td>
+                  <td><button class="rowbtn" style="border-color:var(--blue);color:var(--blue-deep);">Assign</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var titles = {
+      overview:     ['Overview', 'Monday, 13 July 2026 · everything that needs you today'],
+      schedule:     ['Schedule', 'Who visits whom, and when · week of 13 Jul'],
+      tutors:       ['Tutors', 'Availability, contact & approval'],
+      requirements: ['Student requirements', 'Leads from the “Find a Tutor” form'],
+      demos:        ['Demo bookings', 'Free trial classes to arrange']
+    };
+    function activate(view) {
+      document.querySelectorAll('.view').forEach(function (v) { v.classList.toggle('show', v.getAttribute('data-view') === view); });
+      document.querySelectorAll('.nav-item').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-view') === view); });
+      document.querySelectorAll('.mtab').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-view') === view); });
+      var t = titles[view] || ['', ''];
+      document.getElementById('viewTitle').textContent = t[0];
+      document.getElementById('viewSub').textContent = t[1];
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+    document.querySelectorAll('[data-view]').forEach(function (el) {
+      if (el.classList.contains('view')) return;
+      el.addEventListener('click', function () { activate(el.getAttribute('data-view')); });
+    });
+  })();
+</script>
