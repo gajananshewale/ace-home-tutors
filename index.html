@@ -160,9 +160,9 @@
   .hero::before {
     content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
     background:
-      radial-gradient(55% 50% at 85% 6%, color-mix(in srgb, var(--blue) 28%, transparent), transparent 70%),
-      radial-gradient(50% 48% at 8% 88%, color-mix(in srgb, var(--sun) 46%, transparent), transparent 70%),
-      radial-gradient(46% 42% at 62% 112%, color-mix(in srgb, var(--flame) 13%, transparent), transparent 72%);
+      radial-gradient(52% 48% at 86% 4%, color-mix(in srgb, var(--blue) 16%, transparent), transparent 72%),
+      radial-gradient(48% 46% at 8% 90%, color-mix(in srgb, var(--sun) 24%, transparent), transparent 74%),
+      radial-gradient(42% 38% at 62% 114%, color-mix(in srgb, var(--flame) 6%, transparent), transparent 76%);
   }
   .hero-grid { position: relative; z-index:1; padding: 2.8rem 0 3.4rem; }
   @media (min-width: 940px) { .hero-grid { padding: 5rem 0 5.6rem; } }
@@ -198,7 +198,7 @@
     border-radius: 999px; box-shadow: var(--shadow-flame); transform: rotate(2.5deg);
   }
   .mc-head { display: flex; align-items: center; gap: .85rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--line); }
-  .avatar { width: 54px; height: 54px; border-radius: 30%; flex: none; display: grid; place-items: center; color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; overflow: hidden; }
+  .avatar { width: 54px; height: 54px; border-radius: 30%; flex: none; display: grid; place-items: center; background: color-mix(in srgb, var(--blue) 14%, var(--surface)); color: var(--blue-deep); font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; overflow: hidden; }
   .mc-head h4 { font-family: var(--font-body); font-size: 1.05rem; font-weight: 800; }
   .mc-head .sub { font-size: .84rem; color: var(--ink-soft); display: flex; align-items: center; gap: .4rem; margin-top: .15rem; }
   .verified { display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 800; color: var(--good); background: var(--good-bg); padding: .18rem .5rem; border-radius: 999px; }
@@ -237,7 +237,7 @@
   @media (min-width: 980px) { .cats { grid-template-columns: repeat(3, 1fr); } }
   .cat { position: relative; padding: 1.2rem 1.15rem; border-radius: 18px; background: transparent; transition: background .18s ease, box-shadow .22s ease; }
   .cat:hover { background: var(--surface); box-shadow: var(--shadow-sm); }
-  .cat .ic { width: 50px; height: 50px; border-radius: 26%; display: grid; place-items: center; color: #fff; margin-bottom: .95rem; box-shadow: var(--shadow-sm); }
+  .cat .ic { width: 50px; height: 50px; border-radius: 26%; display: grid; place-items: center; background: color-mix(in srgb, var(--blue) 12%, var(--surface)); color: var(--blue-deep); margin-bottom: .95rem; }
   .cat .ic svg { width: 26px; height: 26px; }
   .cat .tag { display: block; font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: var(--blue-deep); margin: 0 0 .5rem; }
   .cat h3 { font-size: 1.16rem; }
@@ -247,13 +247,15 @@
   .cats-foot { text-align: center; margin-top: 2rem; }
 
   /* Steps */
-  .flow { position: relative; display: grid; grid-template-columns: 1fr; gap: 1.9rem; }
-  @media (min-width: 820px) { .flow { grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
-    .flow::before { content:""; position:absolute; top:32px; left:16.66%; right:16.66%; height:3px; background: repeating-linear-gradient(to right, var(--flame) 0 9px, transparent 9px 18px); opacity:.4; z-index:0; } }
-  .fstep { position: relative; z-index: 1; text-align: center; padding: 0 .8rem; }
-  .fnum { width: 64px; height: 64px; margin: 0 auto 1.1rem; border-radius: 50%; background: var(--surface); border: 3px dashed var(--flame); color: var(--flame); display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; }
-  .fstep h3 { font-size: 1.16rem; }
-  .fstep p { margin-top: .5rem; color: var(--ink-soft); font-size: .96rem; max-width: 34ch; margin-inline: auto; }
+  .flow { position: relative; display: grid; grid-template-columns: 1fr; gap: 2rem; }
+  @media (min-width: 820px) { .flow { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .flow::before { content:""; position:absolute; top:31px; left:16.66%; right:16.66%; height:2px; background: var(--line); z-index:0; } }
+  .fstep { position: relative; z-index: 1; text-align: center; padding: 0 1rem; }
+  .ficon { width: 64px; height: 64px; margin: 0 auto 1.15rem; border-radius: 20px; background: color-mix(in srgb, var(--blue) 12%, var(--surface)); color: var(--blue-deep); display: grid; place-items: center; box-shadow: 0 0 0 7px var(--paper-2); }
+  .ficon svg { width: 30px; height: 30px; }
+  .fstep-label { font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+  .fstep h3 { font-size: 1.16rem; margin-top: .45rem; }
+  .fstep p { margin-top: .5rem; color: var(--ink-soft); font-size: .96rem; max-width: 32ch; margin-inline: auto; }
   .steps-foot { text-align: center; margin-top: 2.4rem; }
 
   /* Tutors */
@@ -281,7 +283,7 @@
   @media (min-width: 760px) { .values-grid { grid-template-columns: repeat(2, 1fr); } }
   .value { display: flex; gap: 1rem; align-items: flex-start; background: transparent; border: none; border-left: 3px solid var(--line); border-radius: 0; padding: .35rem 0 .35rem 1.3rem; box-shadow: none; transition: border-color .18s ease; }
   .value:hover { border-left-color: var(--blue); }
-  .value .ic { width: 48px; height: 48px; flex: none; border-radius: 26%; display: grid; place-items: center; color: #fff; }
+  .value .ic { width: 48px; height: 48px; flex: none; border-radius: 26%; display: grid; place-items: center; background: color-mix(in srgb, var(--blue) 12%, var(--surface)); color: var(--blue-deep); }
   .value .ic svg { width: 24px; height: 24px; }
   .value h3 { font-family: var(--font-body); font-size: 1.1rem; font-weight: 800; }
   .value p { margin-top: .4rem; font-size: .96rem; color: var(--ink-soft); }
@@ -297,7 +299,7 @@
   @media (prefers-color-scheme: dark) { .quote .stars { color: var(--sun); } }
   .quote p { font-size: 1rem; color: var(--ink); line-height: 1.62; }
   .quote .who { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--line-soft); display: flex; align-items: center; gap: .7rem; }
-  .quote .who .av { width: 40px; height: 40px; border-radius: 30%; flex: none; display: grid; place-items: center; color: #fff; font-family: var(--font-display); font-weight: 800; font-size: .95rem; }
+  .quote .who .av { width: 40px; height: 40px; border-radius: 30%; flex: none; display: grid; place-items: center; background: color-mix(in srgb, var(--blue) 14%, var(--surface)); color: var(--blue-deep); font-family: var(--font-display); font-weight: 800; font-size: .95rem; }
   .quote .who b { font-weight: 800; font-size: .95rem; }
   .quote .who span { display: block; font-size: .82rem; color: var(--ink-faint); }
 
@@ -381,9 +383,9 @@
   .marquee:hover .row { animation-play-state: paused; }
   .marquee .item { display:inline-flex; align-items:center; gap:.55rem; padding:.95rem 1.6rem; font-family:var(--font-display); font-weight:800; font-size:1.02rem; color:var(--ink); white-space:nowrap; }
   .marquee .item svg { width:18px; height:18px; color:var(--blue); flex:none; }
-  .marquee .item.alt { color:var(--flame); }
-  .marquee .item.alt svg { color:var(--flame); }
-  .marquee .sep { width:6px; height:6px; border-radius:50%; background:var(--sun-deep); align-self:center; }
+  .marquee .item.alt { color:var(--blue-deep); }
+  .marquee .item.alt svg { color:var(--blue-deep); }
+  .marquee .sep { width:5px; height:5px; border-radius:50%; background:var(--ink-faint); opacity:.5; align-self:center; }
 
   /* Playful: floating sticker doodles, sparkle eyebrows, bounce (Ace colours) */
   @keyframes wiggle { 0%,100%{ transform: rotate(0); } 30%{ transform: rotate(-13deg);} 65%{ transform: rotate(10deg);} }
@@ -506,7 +508,7 @@
       </div>
       <div class="cats">
         <article class="cat reveal">
-          <span class="ic" style="background:#0099FF;"><svg viewBox="0 0 24 24" fill="none"><path d="M3 6.5 12 3l9 3.5-9 3.5-9-3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M6 9v5c0 1.2 2.7 2.5 6 2.5s6-1.3 6-2.5V9" stroke="currentColor" stroke-width="1.7"/><path d="M21 6.5V12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M3 6.5 12 3l9 3.5-9 3.5-9-3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M6 9v5c0 1.2 2.7 2.5 6 2.5s6-1.3 6-2.5V9" stroke="currentColor" stroke-width="1.7"/><path d="M21 6.5V12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
           <span class="tag">All Boards</span>
           <h3>Every Board We Cover</h3>
           <p>State Board, CBSE, ICSE, ISC, IGCSE and IB. Whichever syllabus your school follows, we match the right tutor.</p>
@@ -514,7 +516,7 @@
         </article>
 
         <article class="cat reveal">
-          <span class="ic" style="background:#12885A;"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM4 9h16M9 5v14" stroke="currentColor" stroke-width="1.7"/></svg></span>
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM4 9h16M9 5v14" stroke="currentColor" stroke-width="1.7"/></svg></span>
           <span class="tag">Middle School</span>
           <h3>Class V to VIII</h3>
           <p>Subject-specialist tutors for Science, Maths, Social Studies and English as concepts get more advanced.</p>
@@ -522,7 +524,7 @@
         </article>
 
         <article class="cat reveal">
-          <span class="ic" style="background:#FF3210;"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l4 4v14H6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3v5h5M9 13h6M9 17h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l4 4v14H6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3v5h5M9 13h6M9 17h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
           <span class="tag">Board Exams</span>
           <h3>Class IX &amp; X Board Prep</h3>
           <p>Board exam preparation across all boards, with chapter tests, practice papers and exam strategy.</p>
@@ -530,7 +532,7 @@
         </article>
 
         <article class="cat reveal">
-          <span class="ic" style="background:#0A6FC2;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4 2 9l10 5 8-4v6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><path d="M6 11.5V16c0 1.3 2.7 2.5 6 2.5s6-1.2 6-2.5v-4.5" stroke="currentColor" stroke-width="1.7"/></svg></span>
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4 2 9l10 5 8-4v6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><path d="M6 11.5V16c0 1.3 2.7 2.5 6 2.5s6-1.2 6-2.5v-4.5" stroke="currentColor" stroke-width="1.7"/></svg></span>
           <span class="tag">Senior Secondary</span>
           <h3>Class XI &amp; XII</h3>
           <p>Science (PCM/PCB), Commerce and Humanities streams, from theory mastery to internal assessments.</p>
@@ -538,7 +540,7 @@
         </article>
 
         <article class="cat reveal">
-          <span class="ic" style="background:#8A1FD1;"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 2.5 5.3L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.5-.7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 2.5 5.3L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.5-.7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
           <span class="tag">Entrance Prep</span>
           <h3>Competitive Exams</h3>
           <p>NEET, JEE and MHCET foundation and preparation, handled by subject specialists with proven results.</p>
@@ -546,7 +548,7 @@
         </article>
 
         <article class="cat reveal">
-          <span class="ic" style="background:#D97C10;"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 20h8M12 17v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 20h8M12 17v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
           <span class="tag">From Home</span>
           <h3>Online Home Tuition</h3>
           <p>Live, interactive online sessions for families who prefer learning from home, or in areas we don't yet cover physically.</p>
@@ -567,17 +569,20 @@
       </div>
       <div class="flow">
         <div class="fstep reveal">
-          <div class="fnum">1</div>
+          <div class="ficon"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2.2" stroke="currentColor" stroke-width="1.7"/><path d="M9 8h6M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+          <span class="fstep-label">Step 01</span>
           <h3>Submit your requirements</h3>
           <p>Tell us your child's class, subjects, location, preferred timing and budget. Takes less than 2 minutes. No sign-up needed.</p>
         </div>
         <div class="fstep reveal">
-          <div class="fnum">2</div>
+          <div class="ficon"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.1" stroke="currentColor" stroke-width="1.7"/><path d="M3.6 19.5a5.4 5.4 0 0 1 10.8 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M16 5.2a3 3 0 0 1 0 5.9M17.2 19.5a5.4 5.4 0 0 0-2.3-4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+          <span class="fstep-label">Step 02</span>
           <h3>We match you</h3>
           <p>Our team hand-picks 2-3 verified tutors from your area who fit your needs, schedule and budget. You'll hear from us within 24 hours.</p>
         </div>
         <div class="fstep reveal">
-          <div class="fnum">3</div>
+          <div class="ficon"><svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="15" rx="2.2" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 9.5h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="m9.5 14 2 2 3.5-3.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="fstep-label">Step 03</span>
           <h3>Free demo class</h3>
           <p>Attend a no-obligation demo with your matched tutor. Happy? Confirm and start. Not happy? We find another, no questions asked.</p>
         </div>
@@ -597,7 +602,7 @@
       <div class="tutors">
         <article class="tutor reveal">
           <div class="t-top">
-            <span class="avatar" style="width:48px;height:48px;background:#0099FF;font-size:1rem;">AN</span>
+            <span class="avatar" style="width:48px;height:48px;font-size:1rem;">AN</span>
             <div>
               <h3>Anjali Naik</h3>
               <div class="t-meta"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.7"/></svg>Vashi, Navi Mumbai</div>
@@ -610,7 +615,7 @@
 
         <article class="tutor reveal">
           <div class="t-top">
-            <span class="avatar" style="width:48px;height:48px;background:#12885A;font-size:1rem;">RS</span>
+            <span class="avatar" style="width:48px;height:48px;font-size:1rem;">RS</span>
             <div>
               <h3>Rohan Sawant</h3>
               <div class="t-meta"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.7"/></svg>Nerul, Navi Mumbai</div>
@@ -623,7 +628,7 @@
 
         <article class="tutor reveal">
           <div class="t-top">
-            <span class="avatar" style="width:48px;height:48px;background:#FF3210;font-size:1rem;">FK</span>
+            <span class="avatar" style="width:48px;height:48px;font-size:1rem;">FK</span>
             <div>
               <h3>Farida Khan</h3>
               <div class="t-meta"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.7"/></svg>Kharghar, Navi Mumbai</div>
@@ -636,7 +641,7 @@
 
         <article class="tutor reveal">
           <div class="t-top">
-            <span class="avatar" style="width:48px;height:48px;background:#0A6FC2;font-size:1rem;">VJ</span>
+            <span class="avatar" style="width:48px;height:48px;font-size:1rem;">VJ</span>
             <div>
               <h3>Vikram Joshi</h3>
               <div class="t-meta"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.7"/></svg>Panvel, Navi Mumbai</div>
@@ -649,7 +654,7 @@
 
         <article class="tutor reveal">
           <div class="t-top">
-            <span class="avatar" style="width:48px;height:48px;background:#D97C10;font-size:1rem;">MK</span>
+            <span class="avatar" style="width:48px;height:48px;font-size:1rem;">MK</span>
             <div>
               <h3>Mohit Kulkarni</h3>
               <div class="t-meta"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.7"/></svg>Vashi, Navi Mumbai</div>
@@ -674,19 +679,19 @@
       </div>
       <div class="values-grid">
         <div class="value reveal">
-          <span class="ic" style="background:#0099FF;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 4 6v5c0 5 3.4 8.4 8 10 4.6-1.6 8-5 8-10V6l-8-3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 4 6v5c0 5 3.4 8.4 8 10 4.6-1.6 8-5 8-10V6l-8-3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <div><h3>Quality First</h3><p>Every tutor on our network is screened for qualifications, subject knowledge and communication ability before their first session.</p></div>
         </div>
         <div class="value reveal">
-          <span class="ic" style="background:#12885A;"><svg viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 1 0-4-4M8 21v-2a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v2M2 21v-2a3 3 0 0 1 2.5-3M8 11a3 3 0 1 0 0-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 1 0-4-4M8 21v-2a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v2M2 21v-2a3 3 0 0 1 2.5-3M8 11a3 3 0 1 0 0-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <div><h3>Genuine Matching</h3><p>We don't send the nearest available tutor. We study each requirement (class, learning style, budget, location) and match with care.</p></div>
         </div>
         <div class="value reveal">
-          <span class="ic" style="background:#FF3210;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 15a6 6 0 0 0 6-6V4H6v5a6 6 0 0 0 6 6Zm0 0v4m-4 2h8M18 5h2a2 2 0 0 1 0 4h-2M6 5H4a2 2 0 0 0 0 4h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 15a6 6 0 0 0 6-6V4H6v5a6 6 0 0 0 6 6Zm0 0v4m-4 2h8M18 5h2a2 2 0 0 1 0 4h-2M6 5H4a2 2 0 0 0 0 4h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <div><h3>Tutor Empowerment</h3><p>We help talented educators build sustainable income through quality part-time teaching work that fits around their schedule.</p></div>
         </div>
         <div class="value reveal">
-          <span class="ic" style="background:#0A6FC2;"><svg viewBox="0 0 24 24" fill="none"><path d="M3 21c1.5-4 4.5-6 9-6s7.5 2 9 6M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M3 21c1.5-4 4.5-6 9-6s7.5 2 9 6M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <div><h3>Student Success</h3><p>Our measure of success is simple: a student who performs better in exams and feels more confident in their relationship with learning.</p></div>
         </div>
       </div>
@@ -706,7 +711,7 @@
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg>
           </div>
           <p>"My son went from failing Maths to scoring 88% in his board exams. The tutor Ace matched us with understood exactly where he was struggling."</p>
-          <figcaption class="who"><span class="av" style="background:#0099FF;">R</span><span><b>Rekha</b><span>Parent · Nerul</span></span></figcaption>
+          <figcaption class="who"><span class="av">R</span><span><b>Rekha</b><span>Parent · Nerul</span></span></figcaption>
         </figure>
 
         <figure class="quote reveal" style="margin:0;">
@@ -714,7 +719,7 @@
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg>
           </div>
           <p>"We tried three other agencies before Ace. None of them followed up after the first match. Ace's team called twice in the first week to check how the demo went."</p>
-          <figcaption class="who"><span class="av" style="background:#12885A;">A</span><span><b>Amit</b><span>Parent · Vashi</span></span></figcaption>
+          <figcaption class="who"><span class="av">A</span><span><b>Amit</b><span>Parent · Vashi</span></span></figcaption>
         </figure>
 
         <figure class="quote reveal" style="margin:0;">
@@ -722,7 +727,7 @@
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.3 6.9.9-5 4.8 1.2 6.8L12 17.6 5.9 20.8 7.1 14l-5-4.8 6.9-.9z"/></svg>
           </div>
           <p>"My daughter needed help with Class XI Biology for NEET prep. The tutor had eight years of experience. Her concepts are so much clearer now."</p>
-          <figcaption class="who"><span class="av" style="background:#FF3210;">M</span><span><b>Meena</b><span>Parent · Kharghar</span></span></figcaption>
+          <figcaption class="who"><span class="av">M</span><span><b>Meena</b><span>Parent · Kharghar</span></span></figcaption>
         </figure>
       </div>
     </div>
