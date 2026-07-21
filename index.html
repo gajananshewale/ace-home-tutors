@@ -219,7 +219,7 @@
   .trust-cell { padding: 1.6rem 1rem; text-align: center; border-right: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
   @media (min-width: 720px) { .trust-cell { border-bottom: none; } .trust-cell:last-child { border-right: none; } }
   .trust-cell .n { font-family: var(--font-display); font-size: 1.9rem; font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
-  .trust-cell .n b { color: var(--blue-deep); }
+  .trust-cell .n b { color: inherit; }
   .trust-cell .l { font-size: .82rem; color: var(--ink-soft); margin-top: .2rem; }
 
   /* ---------- Sections ---------- */
@@ -387,7 +387,6 @@
 
   /* Playful: floating sticker doodles, sparkle eyebrows, bounce (Ace colours) */
   @keyframes wiggle { 0%,100%{ transform: rotate(0); } 30%{ transform: rotate(-13deg);} 65%{ transform: rotate(10deg);} }
-  .eyebrow::before { content:"\2726"; font-size:.85em; line-height:1; }
   .btn-primary:hover, .btn-sun:hover, .btn-dark:hover { transform: translateY(-2px) scale(1.03); }
   .hero-cta .btn:hover { transform: translateY(-3px) scale(1.05); }
   .btn-primary:hover svg { animation: wiggle .5s ease; }
