@@ -213,16 +213,14 @@
   .match-card .btn { width: 100%; margin-top: .5rem; }
 
   /* ---------- Trust strip ---------- */
-  .trust { background: var(--ink); }
-  :root[data-theme="dark"] .trust { background: #060C17; border-block: 1px solid var(--line); }
-  @media (prefers-color-scheme: dark) { .trust { background: #060C17; } }
+  .trust { background: var(--surface); border-block: 1px solid var(--line); }
   .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); }
   @media (min-width: 720px) { .trust-grid { grid-template-columns: repeat(4, 1fr); } }
-  .trust-cell { padding: 1.5rem 1rem; text-align: center; border-right: 1px solid rgba(255,255,255,.08); border-bottom: 1px solid rgba(255,255,255,.08); }
+  .trust-cell { padding: 1.6rem 1rem; text-align: center; border-right: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
   @media (min-width: 720px) { .trust-cell { border-bottom: none; } .trust-cell:last-child { border-right: none; } }
-  .trust-cell .n { font-family: var(--font-display); font-size: 1.9rem; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; }
-  .trust-cell .n b { color: var(--sun); }
-  .trust-cell .l { font-size: .82rem; color: #B9C4DA; margin-top: .2rem; }
+  .trust-cell .n { font-family: var(--font-display); font-size: 1.9rem; font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .trust-cell .n b { color: var(--blue-deep); }
+  .trust-cell .l { font-size: .82rem; color: var(--ink-soft); margin-top: .2rem; }
 
   /* ---------- Sections ---------- */
   section { padding: 3.8rem 0; position: relative; }
