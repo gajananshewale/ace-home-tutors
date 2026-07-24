@@ -141,7 +141,9 @@
     background: color-mix(in srgb, var(--paper) 86%, transparent);
     backdrop-filter: saturate(1.3) blur(12px);
     border-bottom: 1px solid var(--line-soft);
+    transition: box-shadow .22s ease, border-color .22s ease;
   }
+  header.site.scrolled { box-shadow: 0 6px 24px rgba(12,21,36,.07); border-bottom-color: transparent; }
   .nav { display: flex; align-items: center; justify-content: space-between; height: 66px; gap: 1rem; }
   .nav .brand-lockup .tile { width: 38px; height: 38px; }
   .nav .brand-word { font-size: 1.16rem; }
@@ -158,10 +160,14 @@
   .nav-burger svg { width: 20px; height: 20px; }
   .nav-burger[aria-expanded="true"] { border-color: var(--blue); color: var(--blue-deep); }
   @media (min-width: 900px) { .nav-burger { display: none; } }
-  .mobile-menu { display: grid; gap: .15rem; padding: .5rem 20px 1rem; border-top: 1px solid var(--line-soft); background: color-mix(in srgb, var(--paper) 96%, transparent); }
-  .mobile-menu a { padding: .72rem .65rem; border-radius: 10px; font-weight: 600; color: var(--ink-soft); }
-  .mobile-menu a:hover { background: var(--paper-2); color: var(--ink); }
-  .mobile-menu a.mm-cta { color: var(--blue-deep); font-weight: 700; }
+  .mobile-menu { display: grid; gap: .1rem; padding: .5rem 20px 1.1rem; border-top: 1px solid var(--line-soft); background: var(--paper); box-shadow: var(--shadow-md); }
+  .mobile-menu:not([hidden]) { animation: menuDrop .22s cubic-bezier(.2,.75,.25,1); }
+  @keyframes menuDrop { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+  .mobile-menu a { display: flex; align-items: center; padding: .8rem .7rem; border-radius: 11px; font-weight: 600; font-size: 1.02rem; color: var(--ink-soft); }
+  .mobile-menu a:hover, .mobile-menu a:focus-visible { background: var(--paper-2); color: var(--ink); }
+  .mobile-menu a[aria-current="page"] { color: var(--blue-deep); background: color-mix(in srgb, var(--blue) 9%, transparent); }
+  .mobile-menu a.mm-cta { margin-top: .4rem; padding-top: 1rem; border-top: 1px solid var(--line-soft); color: var(--flame); font-weight: 800; }
+  @media (prefers-reduced-motion: reduce) { .mobile-menu:not([hidden]) { animation: none; } }
   @media (min-width: 900px) { .mobile-menu { display: none !important; } }
 
   /* ---------- Hero ---------- */
@@ -481,6 +487,12 @@
   .story p { color: var(--ink-soft); font-size: 1.12rem; line-height: 1.75; }
   .story p + p { margin-top: 1.2rem; }
   .story .promise { margin-top: 1.6rem; font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; color: var(--ink); }
+  .contact-full .cc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 1.5rem; box-shadow: var(--shadow-sm); transition: transform .16s ease, box-shadow .2s ease; }
+  .contact-full .cc:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .contact-full .cc .big a { color: inherit; }
+  .contact-full .cc .big a:hover { color: var(--blue-deep); }
+  .check-chip { width: 24px; height: 24px; border-radius: 50%; background: var(--good-bg); color: var(--good); display: grid; place-items: center; flex: none; margin-top: .1rem; }
+  .check-chip svg { width: 14px; height: 14px; }
 </style>
 
 <header class="site">
@@ -506,7 +518,7 @@
     <a href="home.html">Home</a>
     <a href="about.html">About</a>
     <a href="services.html">Services</a>
-    <a href="parents.html">Find a Tutor</a>
+    <a href="parents.html" aria-current="page">Find a Tutor</a>
     <a href="faq.html">FAQ</a>
     <a href="contact.html">Contact</a>
     <a class="mm-cta" href="teachers.html">Become a Tutor</a>
@@ -594,19 +606,27 @@
       counters.forEach(function (el) { el.textContent = el.getAttribute('data-to'); });
     }
 
+    // Header elevation on scroll
+    var hdr = document.querySelector('header.site');
+    if (hdr) {
+      var onScroll = function () { hdr.classList.toggle('scrolled', window.scrollY > 8); };
+      window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+    }
     // Mobile nav
+    var ICON_BARS = '<svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+    var ICON_X = '<svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
     var burger = document.querySelector('.nav-burger');
     var mm = document.querySelector('.mobile-menu');
     if (burger && mm) {
-      burger.addEventListener('click', function () {
-        var open = mm.hidden;
+      var setOpen = function (open) {
         mm.hidden = !open;
         burger.setAttribute('aria-expanded', String(open));
         burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      });
-      mm.querySelectorAll('a').forEach(function (a) {
-        a.addEventListener('click', function () { mm.hidden = true; burger.setAttribute('aria-expanded', 'false'); });
-      });
+        burger.innerHTML = open ? ICON_X : ICON_BARS;
+      };
+      burger.addEventListener('click', function () { setOpen(mm.hidden); });
+      mm.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !mm.hidden) setOpen(false); });
     }
   })();
 </script>
